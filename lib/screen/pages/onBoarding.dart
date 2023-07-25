@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:mgahawa_app/includes/colors.dart';
 import 'package:mgahawa_app/screen/navigation/homePage.dart';
 
 class OnBoarding extends StatefulWidget {
@@ -20,17 +21,32 @@ class _OnBoardingState extends State<OnBoarding> {
   }
 
   Widget _buildFullscreenImage() {
-    return Text("Image 1 Here......");
+    return Image.asset(
+      'assets/images/one.png',
+      fit: BoxFit.cover,
+      height: double.infinity,
+      width: double.infinity,
+      alignment: Alignment.center,
+    );
   }
 
   Widget _buildImage(String assetName, [double width = 350]) {
-    // return Image.asset('assets/$assetName', width: width);
-    return Text("");
+    return Image.asset('assets/$assetName', width: width);
+    // return Text("");
   }
 
   @override
   Widget build(BuildContext context) {
-    const bodyStyle = TextStyle(fontSize: 19.0);
+    var titlestyle = TextStyle(
+        fontSize: 23,
+        fontWeight: FontWeight.w500,
+        color: AppColors.primaryColor);
+
+    const bodyDecoration = TextStyle(fontSize: 15);
+
+    const bodyStyle = TextStyle(
+      fontSize: 19.0,
+    );
 
     const pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
@@ -44,14 +60,14 @@ class _OnBoardingState extends State<OnBoarding> {
       key: introKey,
       globalBackgroundColor: Colors.white,
       allowImplicitScrolling: true,
-      autoScrollDuration: 3000,
+      autoScrollDuration: 300000,
       infiniteAutoScroll: true,
       globalHeader: Align(
         alignment: Alignment.topRight,
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 16, right: 16),
-            child: _buildImage('flutter.png', 100),
+            child: _buildImage('images/one.png', 100),
           ),
         ),
       ),
@@ -61,37 +77,50 @@ class _OnBoardingState extends State<OnBoarding> {
         child: ElevatedButton(
           child: const Text(
             'Let\'s go right away!',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
           ),
           onPressed: () => _onIntroEnd(context),
         ),
       ),
       pages: [
         PageViewModel(
-          title: "Fractional shares",
-          body:
-              "Instead of having to buy an entire share, invest any amount you want.",
-          image: _buildImage('img1.jpg'),
+          // title: "Fractional shares",
+          titleWidget: Text(
+            "Welcome to Mgahawa App",
+            style: titlestyle,
+          ),
+          bodyWidget: Center(
+            child: Text(
+                "Instead of having to buy an entire share, invest any amount you want.",
+                style: bodyDecoration),
+          ),
+
+          image: _buildImage('images/two.png'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Learn as you go",
-          body:
-              "Download the Stockpile app and master the market with our mini-lesson.",
-          // image: _buildImage('img2.jpg'),
+          titleWidget: Text(
+            "Welcome to Mgahawa App",
+            style: titlestyle,
+          ),
+          bodyWidget: Center(
+            child: Text(
+                "Instead of having to buy an entire share, invest any amount you want.",
+                style: bodyDecoration),
+          ),
+          image: _buildImage('images/two.png'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Kids and teens",
-          body:
-              "Kids and teens can track their stocks 24/7 and place trades that you approve.",
-          // image: _buildImage('img3.jpg'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Full Screen Page",
-          body:
-              "Pages can be full screen as well.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id euismod lectus, non tempor felis. Nam rutrum rhoncus est ac venenatis.",
+          titleWidget: Text(
+            "Welcome to Mgahawa App",
+            style: titlestyle,
+          ),
+          bodyWidget: Center(
+            child: Text(
+                "Instead of having to buy an entire share, invest any amount you want.",
+                style: bodyDecoration),
+          ),
           image: _buildFullscreenImage(),
           decoration: pageDecoration.copyWith(
             contentMargin: const EdgeInsets.symmetric(horizontal: 16),
@@ -102,9 +131,16 @@ class _OnBoardingState extends State<OnBoarding> {
           ),
         ),
         PageViewModel(
-          title: "Another title page",
-          body: "Another beautiful body text for this example onboarding",
-          // image: _buildImage('img2.jpg'),
+          titleWidget: Text(
+            "Welcome to Mgahawa App",
+            style: titlestyle,
+          ),
+          bodyWidget: Center(
+            child: Text(
+                "Instead of having to buy an entire share, invest any amount you want.",
+                style: bodyDecoration),
+          ),
+          image: _buildImage('images/three.png'),
           footer: ElevatedButton(
             onPressed: () {
               introKey.currentState?.animateScroll(0);
@@ -127,7 +163,10 @@ class _OnBoardingState extends State<OnBoarding> {
           ),
         ),
         PageViewModel(
-          title: "Title of last page - reversed",
+          titleWidget: Text(
+            "final Pages step",
+            style: titlestyle,
+          ),
           bodyWidget: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -142,7 +181,7 @@ class _OnBoardingState extends State<OnBoarding> {
             bodyAlignment: Alignment.bottomCenter,
             imageAlignment: Alignment.topCenter,
           ),
-          // image: _buildImage('img1.jpg'),
+          image: _buildImage('images/four.png'),
           reverse: true,
         ),
       ],
@@ -154,7 +193,11 @@ class _OnBoardingState extends State<OnBoarding> {
       showBackButton: false,
       //rtl: true, // Display as right-to-left
       back: const Icon(Icons.arrow_back),
-      skip: const Text('Skip', style: TextStyle(fontWeight: FontWeight.w600)),
+      skip: const Text(
+        'Skip',
+        style: TextStyle(fontWeight: FontWeight.w600),
+        selectionColor: AppColors.backgroundColor,
+      ),
       next: const Icon(Icons.arrow_forward),
       done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
       curve: Curves.fastLinearToSlowEaseIn,
@@ -171,7 +214,7 @@ class _OnBoardingState extends State<OnBoarding> {
         ),
       ),
       dotsContainerDecorator: const ShapeDecoration(
-        color: Colors.black87,
+        color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),

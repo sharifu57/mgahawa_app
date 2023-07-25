@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mgahawa_app/screen/pages/onBoarding.dart';
+import 'package:mgahawa_app/includes/colors.dart';
 import 'package:mgahawa_app/screen/pages/routes.dart';
 import 'package:mgahawa_app/screen/utilities/splash.dart';
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: route,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
           useMaterial3: true,
           inputDecorationTheme: InputDecorationTheme(
             hintStyle: TextStyle(
@@ -29,6 +29,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: OnBoarding());
+        home: SplashScreen());
   }
 }
