@@ -24,13 +24,13 @@ class _OnBoardingState extends State<OnBoarding> {
     return Image.asset(
       'assets/images/one.png',
       fit: BoxFit.cover,
-      height: double.infinity,
-      width: double.infinity,
+      height: double.infinity / 2,
+      width: double.infinity / 2,
       alignment: Alignment.center,
     );
   }
 
-  Widget _buildImage(String assetName, [double width = 350]) {
+  Widget _buildImage(String assetName, [double width = 200]) {
     return Image.asset('assets/$assetName', width: width);
     // return Text("");
   }
@@ -66,9 +66,8 @@ class _OnBoardingState extends State<OnBoarding> {
         alignment: Alignment.topRight,
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(top: 16, right: 16),
-            child: _buildImage('images/one.png', 100),
-          ),
+              padding: const EdgeInsets.only(top: 16, right: 16),
+              child: Text("")),
         ),
       ),
       globalFooter: SizedBox(
@@ -95,12 +94,12 @@ class _OnBoardingState extends State<OnBoarding> {
                 style: bodyDecoration),
           ),
 
-          image: _buildImage('images/two.png'),
+          image: _buildImage('images/one.png'),
           decoration: pageDecoration,
         ),
         PageViewModel(
           titleWidget: Text(
-            "Welcome to Mgahawa App",
+            "This is second Page",
             style: titlestyle,
           ),
           bodyWidget: Center(
@@ -113,7 +112,7 @@ class _OnBoardingState extends State<OnBoarding> {
         ),
         PageViewModel(
           titleWidget: Text(
-            "Welcome to Mgahawa App",
+            "tThis is third page",
             style: titlestyle,
           ),
           bodyWidget: Center(
@@ -121,7 +120,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 "Instead of having to buy an entire share, invest any amount you want.",
                 style: bodyDecoration),
           ),
-          image: _buildFullscreenImage(),
+          image: _buildImage('images/three.png'),
           decoration: pageDecoration.copyWith(
             contentMargin: const EdgeInsets.symmetric(horizontal: 16),
             fullScreen: true,
@@ -132,7 +131,7 @@ class _OnBoardingState extends State<OnBoarding> {
         ),
         PageViewModel(
           titleWidget: Text(
-            "Welcome to Mgahawa App",
+            "Deliverry Page Here",
             style: titlestyle,
           ),
           bodyWidget: Center(
@@ -141,19 +140,22 @@ class _OnBoardingState extends State<OnBoarding> {
                 style: bodyDecoration),
           ),
           image: _buildImage('images/three.png'),
-          footer: ElevatedButton(
-            onPressed: () {
-              introKey.currentState?.animateScroll(0);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+          footer: Container(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: ElevatedButton(
+              onPressed: () {
+                introKey.currentState?.animateScroll(0);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.secondaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
-            ),
-            child: const Text(
-              'FooButton',
-              style: TextStyle(color: Colors.white),
+              child: const Text(
+                '<- Go Back',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
           decoration: pageDecoration.copyWith(
@@ -164,16 +166,14 @@ class _OnBoardingState extends State<OnBoarding> {
         ),
         PageViewModel(
           titleWidget: Text(
-            "final Pages step",
+            "Get in Time",
             style: titlestyle,
           ),
-          bodyWidget: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Click on ", style: bodyStyle),
-              Icon(Icons.edit),
-              Text(" to edit a post", style: bodyStyle),
-            ],
+          bodyWidget: Container(
+            child: Text(
+              "Save time by making orders..",
+              style: bodyStyle,
+            ),
           ),
           decoration: pageDecoration.copyWith(
             bodyFlex: 2,
