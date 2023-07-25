@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mgahawa_app/screen/pages/onBoarding.dart';
 import 'package:mgahawa_app/screen/pages/routes.dart';
 import 'package:mgahawa_app/screen/utilities/splash.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+  );
+
   runApp(const MyApp());
 }
 
@@ -23,6 +29,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: SplashScreen());
+        home: OnBoarding());
   }
 }
