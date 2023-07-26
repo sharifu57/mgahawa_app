@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mgahawa_app/includes/colors.dart';
-import 'package:mgahawa_app/screen/navigation/homePage.dart';
+import 'package:mgahawa_app/screen/navigation/home.dart';
+import 'package:mgahawa_app/screen/navigation/screen.dart';
 import 'package:mgahawa_app/screen/pages/onBoarding.dart';
 import 'package:mgahawa_app/services/storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
           // Returning user, navigate to the Home page.
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OnBoarding()),
+            MaterialPageRoute(builder: (context) => Screen()),
           );
         }
       });

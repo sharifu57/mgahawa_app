@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:mgahawa_app/includes/colors.dart';
-import 'package:mgahawa_app/screen/navigation/homePage.dart';
+import 'package:mgahawa_app/screen/navigation/home.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -37,7 +37,7 @@ class _OnBoardingState extends State<OnBoarding> {
 
   @override
   Widget build(BuildContext context) {
-    var titlestyle = TextStyle(
+    var titlestyle = const TextStyle(
         fontSize: 23,
         fontWeight: FontWeight.w500,
         color: AppColors.primaryColor);
@@ -62,12 +62,11 @@ class _OnBoardingState extends State<OnBoarding> {
       allowImplicitScrolling: true,
       autoScrollDuration: 300000,
       infiniteAutoScroll: true,
-      globalHeader: Align(
+      globalHeader: const Align(
         alignment: Alignment.topRight,
         child: SafeArea(
           child: Padding(
-              padding: const EdgeInsets.only(top: 16, right: 16),
-              child: Text("")),
+              padding: EdgeInsets.only(top: 16, right: 16), child: Text("")),
         ),
       ),
       globalFooter: SizedBox(
@@ -88,7 +87,7 @@ class _OnBoardingState extends State<OnBoarding> {
             "Welcome to Mgahawa App",
             style: titlestyle,
           ),
-          bodyWidget: Center(
+          bodyWidget: const Center(
             child: Text(
                 "Instead of having to buy an entire share, invest any amount you want.",
                 style: bodyDecoration),
@@ -102,7 +101,7 @@ class _OnBoardingState extends State<OnBoarding> {
             "This is second Page",
             style: titlestyle,
           ),
-          bodyWidget: Center(
+          bodyWidget: const Center(
             child: Text(
                 "Instead of having to buy an entire share, invest any amount you want.",
                 style: bodyDecoration),
@@ -115,7 +114,7 @@ class _OnBoardingState extends State<OnBoarding> {
             "tThis is third page",
             style: titlestyle,
           ),
-          bodyWidget: Center(
+          bodyWidget: const Center(
             child: Text(
                 "Instead of having to buy an entire share, invest any amount you want.",
                 style: bodyDecoration),
@@ -134,14 +133,14 @@ class _OnBoardingState extends State<OnBoarding> {
             "Deliverry Page Here",
             style: titlestyle,
           ),
-          bodyWidget: Center(
+          bodyWidget: const Center(
             child: Text(
                 "Instead of having to buy an entire share, invest any amount you want.",
                 style: bodyDecoration),
           ),
           image: _buildImage('images/three.png'),
           footer: Container(
-            padding: EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             child: ElevatedButton(
               onPressed: () {
                 introKey.currentState?.animateScroll(0);
