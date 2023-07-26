@@ -3,6 +3,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mgahawa_app/includes/colors.dart';
 import 'package:mgahawa_app/models/categoryModel.dart';
+import 'package:mgahawa_app/models/foodModel.dart';
 import 'package:mgahawa_app/services/api.dart';
 import 'package:mgahawa_app/services/config.dart';
 
@@ -14,11 +15,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final endpoint = '${config['apiBaseUrl']}/categories';
+  final categoriesApi = '${config['apiBaseUrl']}/categories';
+  final foodItemApi = '${config['apiBaseUrl']}/fooditems';
   List<Category> categories = [];
+  List<FoodItem> foods = [];
+
+  Future getFoodItems() async {
+    final response = await getRequest(foodItemApi);
+
+    if (response != null) {
+      List<dynamic> responseData = response.data;
+      if (responseData.isNotEmpty) {
+        List<FoodItem> fetchedFoods = responseData
+            .map((foodData) => FoodItem.fromJson(foodData))
+            .toList();
+
+        setState(() {
+          foods = fetchedFoods;
+        });
+        print("____show foods data");
+        print(foods);
+      }
+    }
+  }
 
   Future getCategories() async {
-    final response = await getRequest(endpoint);
+    final response = await getRequest(categoriesApi);
 
     if (response != null) {
       List<dynamic> responseData = response.data;
@@ -69,9 +91,6 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         locationName = currentLocationName;
       });
-
-      print("______show the name");
-      print(locationName);
     } catch (e) {
       print("Error getting location: $e");
     }
@@ -81,6 +100,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getCategories();
+    getFoodItems();
     _getLocationPermission();
     _getCurrentLocation();
   }
@@ -129,15 +149,13 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Container(
-              child: Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                child: SizedBox(
-                  height: 150,
-                  width: double.infinity,
-                  child: Card(
-                    color: AppColors.secondaryColor,
-                    child: Text("Barners"),
-                  ),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              child: const SizedBox(
+                height: 150,
+                width: double.infinity,
+                child: Card(
+                  color: AppColors.secondaryColor,
+                  child: Text("Barners"),
                 ),
               ),
             ),
@@ -145,9 +163,9 @@ class _HomePageState extends State<HomePage> {
               padding: padding,
               child: TextFormField(
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 15.0),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 15.0),
                   hintText: "Search here..",
-                  prefixIcon: Icon(
+                  prefixIcon: const Icon(
                     Icons.search,
                     size: 14,
                   ),
@@ -163,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                 width: fullWidth,
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                       height: 50,
                       width: double.infinity,
                       child: ListView.builder(
@@ -171,11 +189,80 @@ class _HomePageState extends State<HomePage> {
                           itemCount: categories.isEmpty ? 0 : categories.length,
                           itemBuilder: (BuildContext context, index) {
                             Category category = categories[index];
-                            return Container(
-                              child: Text(category.name ?? ''),
+                            return GestureDetector(
+                              onTap: () {
+                                print(
+                                  "________card ${index}",
+                                );
+                              },
+                              child: Card(
+                                  color: index == 0
+                                      ? AppColors.secondaryColor
+                                      : Colors.white,
+                                  child: Center(
+                                      child: Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 15, right: 15),
+                                          child: Text(
+                                            category.name ?? '',
+                                            style: TextStyle(
+                                                color: index == 0
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontWeight: FontWeight.w500),
+                                          )))),
                             );
                           }),
-                    )
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        "Popular",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black),
+                      ),
+                    ),
+                    Expanded(
+                        child: Container(
+                      child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.75,
+                            mainAxisSpacing: 5.0,
+                            crossAxisSpacing: 7.0,
+                          ),
+                          itemCount: foods.isEmpty ? 0 : foods.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            FoodItem food = foods[index];
+                            return IgnorePointer(
+                              child: GestureDetector(
+                                child: Card(
+                                  elevation: 2,
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: Image.network(
+                                            '${food.image}',
+                                            fit: BoxFit.contain,
+                                            width: fullWidth,
+                                          ),
+                                        ),
+                                      ))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                    ))
                   ],
                 ),
               ),
@@ -186,100 +273,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-
-// return SingleChildScrollView(
-    //     child: Container(
-    //   color: Colors.white,
-    //   height: fullHeight,
-    //   width: fullWidth,
-    //   child: Scaffold(
-    //     body: Column(
-    //       children: [
-    //         Container(
-    //           padding: EdgeInsets.only(
-    //             top: 50,
-    //             left: 10,
-    //             right: 10,
-    //           ),
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               Container(
-    //                   child: IconButton(
-    //                 onPressed: () {},
-    //                 icon: Icon(Icons.auto_awesome_mosaic_rounded),
-    //                 color: AppColors.primaryColor,
-    //               )),
-    //               Container(
-    //                 child: Column(
-    //                   children: [Text("Location"), Text("${locationName}")],
-    //                 ),
-    //               ),
-    //               Container(
-    //                   child: IconButton(
-    //                 onPressed: () {},
-    //                 icon: Icon(Icons.shopping_cart_checkout),
-    //                 color: AppColors.primaryColor,
-    //               ))
-    //             ],
-    //           ),
-    //         ),
-    //         Container(
-    //           padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-    //           child: SizedBox(
-    //             height: 150,
-    //             width: double.infinity,
-    //             child: Card(
-    //               color: AppColors.secondaryColor,
-    //               child: Text("Barners"),
-    //             ),
-    //           ),
-    //         ),
-    //         Container(
-    //           pContainer(
-    //           padding: padding,
-    //           child: ListView.builder(
-    //             itemCount: categories.length,
-    //             itemBuilder: (context, index) {
-    //               Category category = categories[index];
-    //               return ListTile(
-    //                 title: Text(category.name ?? ""),
-    //                 subtitle: Text(category.code ?? ""),
-    //                 // Add any other widgets or UI components to display additional information about the category.
-    //               );
-    //             },
-    //           ),
-    //         )adding: padding,
-    //           child: TextFormField(
-    //             decoration: InputDecoration(
-    //               contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-    //               hintText: "Search here..",
-    //               prefixIcon: Icon(
-    //                 Icons.search,
-    //                 size: 14,
-    //               ),
-    //               border: OutlineInputBorder(
-    //                   borderRadius: BorderRadius.circular(30)),
-    //             ),
-    //           ),
-    //         ),
-    //         Container(
-    //           padding: padding,
-    //           child: ListView.builder(
-    //             itemCount: categories.length,
-    //             itemBuilder: (context, index) {
-    //               Category category = categories[index];
-    //               return ListTile(
-    //                 title: Text(category.name ?? ""),
-    //                 subtitle: Text(category.code ?? ""),
-    //                 // Add any other widgets or UI components to display additional information about the category.
-    //               );
-    //             },
-    //           ),
-    //         )
-    //       ],
-    //     ),
-    //   ),
-    // ));
