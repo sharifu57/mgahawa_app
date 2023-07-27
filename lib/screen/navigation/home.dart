@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mgahawa_app/includes/colors.dart';
 import 'package:mgahawa_app/models/categoryModel.dart';
 import 'package:mgahawa_app/models/foodModel.dart';
+import 'package:mgahawa_app/screen/pages/checkout.dart';
 import 'package:mgahawa_app/services/api.dart';
 import 'package:mgahawa_app/services/config.dart';
 
@@ -19,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   final foodItemApi = '${config['apiBaseUrl']}/fooditems';
   List<Category> categories = [];
   List<FoodItem> foods = [];
+  List<FoodItem> _ckeckoutList = [];
 
   Future getFoodItems() async {
     final response = await getRequest(foodItemApi);
@@ -33,8 +35,6 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           foods = fetchedFoods;
         });
-        print("____show foods data");
-        print(foods);
       }
     }
   }
@@ -52,8 +52,6 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           categories = fetchedCategories;
         });
-        print("____show categories");
-        print(categories);
       }
     }
   }
@@ -96,6 +94,27 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void handleItemClick(FoodItem item) {
+    print("add new item____");
+    setState(() {
+      if (_ckeckoutList.contains(item)) {
+        _ckeckoutList.remove(item);
+      } else {
+        _ckeckoutList.add(item);
+      }
+    });
+    print("end of new item___");
+  }
+
+  void navigateToCheckoutList() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckoutListScreen(checkoutList: _ckeckoutList),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -106,7 +125,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   String? locationName;
-  var padding = EdgeInsets.only(left: 30, right: 30, top: 20);
+  var padding = const EdgeInsets.only(left: 30, right: 30, top: 20);
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +143,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Text(
                 "$locationName",
-                style: TextStyle(fontSize: 13),
+                style: const TextStyle(fontSize: 13),
               )
             ],
           ),
@@ -190,32 +209,25 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: (BuildContext context, index) {
                             Category category = categories[index];
                             return GestureDetector(
-                              onTap: () {
-                                print(
-                                  "________card ${index}",
-                                );
-                              },
-                              child: Card(
-                                  color: index == 0
-                                      ? AppColors.secondaryColor
-                                      : Colors.white,
-                                  child: Center(
-                                      child: Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 15, right: 15),
-                                          child: Text(
-                                            category.name ?? '',
-                                            style: TextStyle(
-                                                color: index == 0
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                                fontWeight: FontWeight.w500),
-                                          )))),
-                            );
+                                onTap: () {
+                                  print("______button_________****");
+                                  print(
+                                    "________card ${index}",
+                                  );
+                                },
+                                child: IconButton(
+                                    onPressed: () {
+                                      print("______tapping one");
+                                      navigateToCheckoutList;
+                                    },
+                                    icon: const Icon(
+                                      Icons.shopping_cart_sharp,
+                                      color: AppColors.primaryColor,
+                                    )));
                           }),
                     ),
                     Container(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 20),
                       alignment: Alignment.centerLeft,
                       child: const Text(
                         "Popular",
@@ -226,43 +238,93 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Expanded(
-                        child: Container(
-                      child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.75,
-                            mainAxisSpacing: 5.0,
-                            crossAxisSpacing: 7.0,
-                          ),
-                          itemCount: foods.isEmpty ? 0 : foods.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            FoodItem food = foods[index];
-                            return IgnorePointer(
-                              child: GestureDetector(
-                                child: Card(
-                                  elevation: 2,
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        child: ClipRRect(
+                        child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.75,
+                              mainAxisSpacing: 5.0,
+                              crossAxisSpacing: 7.0,
+                            ),
+                            itemCount: foods.isEmpty ? 0 : foods.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              FoodItem food = foods[index];
+                              bool isSelected = _ckeckoutList.contains(food);
+                              return IgnorePointer(
+                                child: GestureDetector(
+                                  onTap: () => handleItemClick(food),
+                                  child: Card(
+                                    elevation: isSelected ? 4.0 : 2.0,
+                                    color: isSelected
+                                        ? Colors.blue.withOpacity(0.3)
+                                        : Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                            child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(5),
                                           child: Image.network(
                                             '${food.image}',
                                             fit: BoxFit.contain,
                                             width: fullWidth,
+                                            height: fullHeight / 4,
+                                          ),
+                                        )),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 10, 10, 0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "${food.name}",
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ))
-                                    ],
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 0, 0, 0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    "TZS ",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  Text(
+                                                    "${food.price}",
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }),
-                    ))
+                              );
+                            }))
                   ],
                 ),
               ),
