@@ -11,16 +11,41 @@ class CheckoutListScreen extends StatelessWidget {
     // Build your UI to display the checkout list here
     return Scaffold(
       appBar: AppBar(
-        title: Text('Checkout List'),
+        elevation: 10,
+        // title: Text('My Cart'),
+        // title: Text(""),
+        // leading: Container(
+        //     child: Row(
+        //   children: [
+        //     IconButton(
+        //         onPressed: () {}, icon: Icon(Icons.arrow_back_ios_new_sharp)),
+        //     Text("My Cart"),
+        //   ],
+        // )),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/screen');
+            },
+            icon: Icon(Icons.arrow_back_ios_new)),
+        title: Container(
+          child: Text("My Cart"),
+        ),
       ),
       body: ListView.builder(
         itemCount: checkoutList.length,
         itemBuilder: (context, index) {
           FoodItem food = checkoutList[index];
-          return ListTile(
-            title: Text(''),
-            subtitle: Text(''),
-            trailing: Text('${food.price}'),
+          return SingleChildScrollView(
+            child: Card(
+              // child: ListTile(
+              //   title: Text('${food}'),
+              //   subtitle: Text(''),
+              //   trailing: Text('${food.price}'),
+              // ),
+              child: ListTile(
+                leading: Container(),
+              ),
+            ),
           );
         },
       ),
