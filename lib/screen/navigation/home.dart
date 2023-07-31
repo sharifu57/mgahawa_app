@@ -187,8 +187,10 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              CheckoutListScreen(checkoutList: _ckeckoutList),
+                          builder: (context) => CheckoutListScreen(
+                            checkoutList: _ckeckoutList,
+                            onDismiss: (FoodItem) {},
+                          ),
                         ),
                       );
                     },
@@ -303,11 +305,11 @@ class _HomePageState extends State<HomePage> {
                             ),
                             itemCount: foods.isEmpty ? 0 : foods.length,
                             itemBuilder: (BuildContext context, int index) {
-                              FoodItem food = foods[index];
-                              bool isSelected = _ckeckoutList.contains(food);
+                              FoodItem item = foods[index];
+                              bool isSelected = _ckeckoutList.contains(item);
                               return GestureDetector(
                                 onTap: () {
-                                  handleItemClick(food);
+                                  handleItemClick(item);
 
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
@@ -329,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                                           child: ClipRRect(
                                         borderRadius: BorderRadius.circular(5),
                                         child: Image.network(
-                                          '${food.image}',
+                                          '${item.image}',
                                           fit: BoxFit.contain,
                                           width: fullWidth,
                                           height: fullHeight / 4,
@@ -346,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              "${food.name}",
+                                              "${item.name}",
                                               style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w500),
@@ -371,7 +373,7 @@ class _HomePageState extends State<HomePage> {
                                                           FontWeight.w500),
                                                 ),
                                                 Text(
-                                                  "${food.price}",
+                                                  "${item.price}",
                                                   style: const TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
@@ -387,8 +389,11 @@ class _HomePageState extends State<HomePage> {
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           CheckoutListScreen(
-                                                              checkoutList:
-                                                                  _ckeckoutList),
+                                                        checkoutList:
+                                                            _ckeckoutList,
+                                                        onDismiss:
+                                                            (FoodItem) {},
+                                                      ),
                                                     ),
                                                   );
                                                 },
