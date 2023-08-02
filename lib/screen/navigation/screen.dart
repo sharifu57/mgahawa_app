@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mgahawa_app/includes/colors.dart';
 import 'package:mgahawa_app/screen/navigation/cart.dart';
 import 'package:mgahawa_app/screen/navigation/home.dart';
+import 'package:mgahawa_app/screen/navigation/index.dart';
 import 'package:mgahawa_app/screen/navigation/profile.dart';
 import 'package:mgahawa_app/screen/navigation/search.dart';
 
@@ -29,7 +30,7 @@ class _ScreenState extends State<Screen> {
   Widget build(BuildContext context) {
     final tabs = [
       Center(
-        child: HomePage(),
+        child: IndexPage(),
       ),
       Center(child: Search()),
       Center(

@@ -6,6 +6,7 @@ class FoodItem {
   String? description;
   String? price;
   String? image;
+  int? quantity;
   Category? category;
 
   FoodItem(
@@ -14,6 +15,7 @@ class FoodItem {
       required this.description,
       required this.price,
       required this.image,
+      required this.quantity,
       this.category});
 
   factory FoodItem.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class FoodItem {
         description: json['description'],
         price: json['price'],
         image: json['image'],
+        quantity: json['quantity'],
         category: json['category'] != null ? null : null);
   }
 
@@ -33,12 +36,13 @@ class FoodItem {
     data['description'] = description;
     data['price'] = price;
     data['image'] = image;
+    data['quantity'] = quantity;
     data['category'] = category?.toJson();
     return data;
   }
 
   @override
   String toString() {
-    return 'FoodItem(id: $id, name: $name, description: $description, price: $price, image: $image, category: $category)';
+    return 'FoodItem(id: $id, name: $name, description: $description, price: $price, image: $image,quantity: $quantity, category: $category)';
   }
 }

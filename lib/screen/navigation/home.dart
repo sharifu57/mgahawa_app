@@ -26,6 +26,10 @@ class _HomePageState extends State<HomePage> {
   Future getFoodItems() async {
     final response = await getRequest(foodItemApi);
 
+    print("_____food response");
+    print(response);
+    print("____end food response");
+
     if (response != null) {
       List<dynamic> responseData = response.data;
       if (responseData.isNotEmpty) {
@@ -128,6 +132,7 @@ class _HomePageState extends State<HomePage> {
               name: 'Not Found',
               price: '0',
               image: '',
+              quantity: 1,
               description: ''),
         );
 
@@ -295,85 +300,77 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Expanded(
-                        child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.75,
-                              mainAxisSpacing: 5.0,
-                              crossAxisSpacing: 7.0,
-                            ),
-                            itemCount: foods.isEmpty ? 0 : foods.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              FoodItem item = foods[index];
-                              bool isSelected = _ckeckoutList.contains(item);
-                              return GestureDetector(
-                                onTap: () {
-                                  handleItemClick(item);
+                        child: foods.isEmpty
+                            ? Center(
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.emoji_people),
+                                    CircularProgressIndicator(
+                                      strokeWidth: 1,
+                                      color: AppColors.primaryColor,
+                                    )
+                                  ],
+                                ),
+                              )
+                            : GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.75,
+                                  mainAxisSpacing: 5.0,
+                                  crossAxisSpacing: 7.0,
+                                ),
+                                itemCount: foods.isEmpty ? 0 : foods.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  FoodItem item = foods[index];
+                                  bool isSelected =
+                                      _ckeckoutList.contains(item);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      handleItemClick(item);
 
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: isSelected
-                                        ? Text('Removed from the cart')
-                                        : Text("Added to Cart"),
-                                    duration: const Duration(seconds: 1),
-                                    action: SnackBarAction(
-                                      label: 'ACTION',
-                                      onPressed: () {},
-                                    ),
-                                  ));
-                                },
-                                child: Card(
-                                  color: isSelected ? Colors.red : Colors.white,
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                          child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Image.network(
-                                          '${item.image}',
-                                          fit: BoxFit.contain,
-                                          width: fullWidth,
-                                          height: fullHeight / 4,
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        content: isSelected
+                                            ? Text('Removed from the cart')
+                                            : Text("Added to Cart"),
+                                        duration: const Duration(seconds: 1),
+                                        action: SnackBarAction(
+                                          label: 'ACTION',
+                                          onPressed: () {},
                                         ),
-                                      )),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 10, 10, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "${item.name}",
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500),
+                                      ));
+                                    },
+                                    child: Card(
+                                      color: isSelected
+                                          ? Colors.red
+                                          : Colors.white,
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                              child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            child: Image.network(
+                                              '${item.image}',
+                                              fit: BoxFit.contain,
+                                              width: fullWidth,
+                                              height: fullHeight / 4,
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 0, 0, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
+                                          )),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                10, 10, 10, 0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                const Text(
-                                                  "TZS ",
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
                                                 Text(
-                                                  "${item.price}",
+                                                  "${item.name}",
                                                   style: const TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
@@ -381,34 +378,63 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ],
                                             ),
-                                            IconButton(
-                                                onPressed: () {
-                                                  print("______tapping one");
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CheckoutListScreen(
-                                                        checkoutList:
-                                                            _ckeckoutList,
-                                                        onDismiss:
-                                                            (FoodItem) {},
-                                                      ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                10, 0, 0, 0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const Text(
+                                                      "TZS ",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w500),
                                                     ),
-                                                  );
-                                                },
-                                                icon: const Icon(
-                                                  Icons.shopping_cart_sharp,
-                                                  color: AppColors.primaryColor,
-                                                ))
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }))
+                                                    Text(
+                                                      "${item.price}",
+                                                      style: const TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ],
+                                                ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      print(
+                                                          "______tapping one");
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CheckoutListScreen(
+                                                            checkoutList:
+                                                                _ckeckoutList,
+                                                            onDismiss:
+                                                                (FoodItem) {},
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.shopping_cart_sharp,
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                    ))
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }))
                   ],
                 ),
               ),
