@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mgahawa_app/includes/colors.dart';
-import 'package:mgahawa_app/models/foodModel.dart';
+import 'package:mgahawa_app/models/product.dart';
 
 class CheckoutListScreen extends StatelessWidget {
-  final List<FoodItem> checkoutList;
-  final Function(FoodItem) onDismiss;
+  final List<Product> checkoutList;
+  final Function(Product) onDismiss;
 
   CheckoutListScreen({required this.checkoutList, required this.onDismiss});
 
@@ -28,7 +28,7 @@ class CheckoutListScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: checkoutList.length,
               itemBuilder: (context, index) {
-                FoodItem food = checkoutList[index];
+                Product food = checkoutList[index];
 
                 return Container(
                   padding: EdgeInsets.only(left: 10, right: 10),

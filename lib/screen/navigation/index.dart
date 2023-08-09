@@ -1,8 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:mgahawa_app/components/navbar.dart';
 import 'package:mgahawa_app/includes/colors.dart';
 import 'package:mgahawa_app/includes/dimensions.dart';
 import 'package:mgahawa_app/models/categoryModel.dart';
+import 'package:mgahawa_app/screen/pages/category/view_category.dart';
 import 'package:mgahawa_app/services/api.dart';
 import 'package:mgahawa_app/services/config.dart';
 
@@ -53,9 +55,10 @@ class _IndexPageState extends State<IndexPage> {
     int cartItemCount = 0;
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: AppColors.primaryColor,
-          title:
-              Center(child: Text("0657871769/0744939220", style: myTextStyle))),
+        backgroundColor: AppColors.primaryColor,
+        title: Center(child: Text("0657871769/0744939220", style: myTextStyle)),
+        automaticallyImplyLeading: false,
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
@@ -64,49 +67,7 @@ class _IndexPageState extends State<IndexPage> {
           child: Column(
             children: [
               Container(
-                child: AppBar(
-                  elevation: 10,
-                  leading: Center(
-                    child: Container(
-                      child: Text('Logo'),
-                    ),
-                  ),
-                  actions: [
-                    Stack(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.shopping_cart),
-                          onPressed: () {
-                            // Add your onPressed functionality here
-                          },
-                        ),
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: Container(
-                            padding: EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            constraints: BoxConstraints(
-                              minWidth: 16,
-                              minHeight: 16,
-                            ),
-                            child: Text(
-                              '$cartItemCount',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                child: NavBar(),
               ),
               Container(
                 height: fullHeight / 5,
@@ -153,20 +114,50 @@ class _IndexPageState extends State<IndexPage> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       Category item = categories[index];
-                      return Card(
-                        color: Colors.white,
-                        child: item.icon == null
-                            ? Icon(
-                                Icons.food_bank,
-                                color: Colors.black,
-                                size: 50,
+                      return GestureDetector(
+                        onTap: () {
+                          print("____print ${item.id}");
+                          // Navigator.pushNamed(context, "/viewCategory",
+                          //     arguments: item);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewCategory(
+                                    categoryName: '${item.name}',
+                                      categoryId: '${item.id}',
+                                      category: '$item')));
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                child: item.icon == null
+                                    ? Icon(
+                                        Icons.food_bank,
+                                        color: Colors.black,
+                                        size: 50,
+                                      )
+                                    : Image.network(
+                                        '${item.icon}',
+                                        fit: BoxFit.contain,
+                                        width: fullWidth,
+                                        height: fullHeight / 4,
+                                      ),
+                              )),
+                              Container(
+                                padding: EdgeInsets.only(bottom: 20),
+                                child: Text(
+                                  "${item.name}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
                               )
-                            : Image.network(
-                                '${item.icon}',
-                                fit: BoxFit.contain,
-                                width: fullWidth,
-                                height: fullHeight / 4,
-                              ),
+                            ],
+                          ),
+                        ),
                       );
                     }),
               ))

@@ -3,7 +3,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mgahawa_app/includes/colors.dart';
 import 'package:mgahawa_app/models/categoryModel.dart';
-import 'package:mgahawa_app/models/foodModel.dart';
+import 'package:mgahawa_app/models/product.dart';
 import 'package:mgahawa_app/screen/pages/checkout.dart';
 import 'package:mgahawa_app/services/api.dart';
 import 'package:mgahawa_app/services/config.dart';
@@ -20,29 +20,29 @@ class _HomePageState extends State<HomePage> {
   final categoriesApi = '${config['apiBaseUrl']}/categories';
   final foodItemApi = '${config['apiBaseUrl']}/fooditems';
   List<Category> categories = [];
-  List<FoodItem> foods = [];
-  List<FoodItem> _ckeckoutList = [];
+  List<Product> foods = [];
+  List<Product> _ckeckoutList = [];
 
-  Future getFoodItems() async {
-    final response = await getRequest(foodItemApi);
+  // Future getFoodItems() async {
+  //   final response = await getRequest(foodItemApi);
 
-    print("_____food response");
-    print(response);
-    print("____end food response");
+  //   print("_____food response");
+  //   print(response);
+  //   print("____end food response");
 
-    if (response != null) {
-      List<dynamic> responseData = response.data;
-      if (responseData.isNotEmpty) {
-        List<FoodItem> fetchedFoods = responseData
-            .map((foodData) => FoodItem.fromJson(foodData))
-            .toList();
+  //   if (response != null) {
+  //     List<dynamic> responseData = response.data;
+  //     if (responseData.isNotEmpty) {
+  //       List<FoodItem> fetchedFoods = responseData
+  //           .map((foodData) => FoodItem.fromJson(foodData))
+  //           .toList();
 
-        setState(() {
-          foods = fetchedFoods;
-        });
-      }
-    }
-  }
+  //       setState(() {
+  //         foods = fetchedFoods;
+  //       });
+  //     }
+  //   }
+  // }
 
   Future getCategories() async {
     final response = await getRequest(categoriesApi);
@@ -99,63 +99,63 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void handleItemClick(FoodItem item) async {
-    setState(() {
-      if (_ckeckoutList.contains(item)) {
-        _ckeckoutList.remove(item);
-      } else {
-        _ckeckoutList.add(item);
-      }
-    });
+  // void handleItemClick(FoodItem item) async {
+  //   setState(() {
+  //     if (_ckeckoutList.contains(item)) {
+  //       _ckeckoutList.remove(item);
+  //     } else {
+  //       _ckeckoutList.add(item);
+  //     }
+  //   });
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> checkoutListIds =
-        _ckeckoutList.map((item) => item.id.toString()).cast<String>().toList();
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   List<String> checkoutListIds =
+  //       _ckeckoutList.map((item) => item.id.toString()).cast<String>().toList();
 
-    await prefs.setStringList('_ckeckoutList', checkoutListIds);
-    print(checkoutListIds);
-    print("end of new item___");
-  }
+  //   await prefs.setStringList('_ckeckoutList', checkoutListIds);
+  //   print(checkoutListIds);
+  //   print("end of new item___");
+  // }
 
-  void _loadCheckoutListFromPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? checkoutListIds = prefs.getStringList('_ckeckoutList');
+  // void _loadCheckoutListFromPrefs() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   List<String>? checkoutListIds = prefs.getStringList('_ckeckoutList');
 
-    if (checkoutListIds != null && checkoutListIds.isNotEmpty) {
-      List<FoodItem> loadedCheckoutList = [];
+  //   if (checkoutListIds != null && checkoutListIds.isNotEmpty) {
+  //     List<FoodItem> loadedCheckoutList = [];
 
-      for (String id in checkoutListIds) {
-        FoodItem foundItem = foods.firstWhere(
-          (item) => item.id.toString() == id,
-          orElse: () => FoodItem(
-              id: -1,
-              name: 'Not Found',
-              price: '0',
-              image: '',
-              quantity: 1,
-              description: ''),
-        );
+  //     for (String id in checkoutListIds) {
+  //       FoodItem foundItem = foods.firstWhere(
+  //         (item) => item.id.toString() == id,
+  //         orElse: () => FoodItem(
+  //             id: -1,
+  //             name: 'Not Found',
+  //             price: '0',
+  //             image: '',
+  //             quantity: 1,
+  //             description: ''),
+  //       );
 
-        // Check if the item was found and it's not the dummy "Not Found" item
-        if (foundItem.id != -1) {
-          loadedCheckoutList.add(foundItem);
-        }
-      }
+  //       // Check if the item was found and it's not the dummy "Not Found" item
+  //       if (foundItem.id != -1) {
+  //         loadedCheckoutList.add(foundItem);
+  //       }
+  //     }
 
-      setState(() {
-        _ckeckoutList = loadedCheckoutList;
-      });
-    }
-  }
+  //     setState(() {
+  //       _ckeckoutList = loadedCheckoutList;
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
     getCategories();
-    getFoodItems();
+    // getFoodItems();
     _getLocationPermission();
     _getCurrentLocation();
-    _loadCheckoutListFromPrefs();
+    // _loadCheckoutListFromPrefs();
   }
 
   String? locationName;
@@ -321,120 +321,8 @@ class _HomePageState extends State<HomePage> {
                                   crossAxisSpacing: 7.0,
                                 ),
                                 itemCount: foods.isEmpty ? 0 : foods.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  FoodItem item = foods[index];
-                                  bool isSelected =
-                                      _ckeckoutList.contains(item);
-                                  return GestureDetector(
-                                    onTap: () {
-                                      handleItemClick(item);
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                        content: isSelected
-                                            ? Text('Removed from the cart')
-                                            : Text("Added to Cart"),
-                                        duration: const Duration(seconds: 1),
-                                        action: SnackBarAction(
-                                          label: 'ACTION',
-                                          onPressed: () {},
-                                        ),
-                                      ));
-                                    },
-                                    child: Card(
-                                      color: isSelected
-                                          ? Colors.red
-                                          : Colors.white,
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                              child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            child: Image.network(
-                                              '${item.image}',
-                                              fit: BoxFit.contain,
-                                              width: fullWidth,
-                                              height: fullHeight / 4,
-                                            ),
-                                          )),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "${item.name}",
-                                                  style: const TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 0, 0, 0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    const Text(
-                                                      "TZS ",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    Text(
-                                                      "${item.price}",
-                                                      style: const TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  ],
-                                                ),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      print(
-                                                          "______tapping one");
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              CheckoutListScreen(
-                                                            checkoutList:
-                                                                _ckeckoutList,
-                                                            onDismiss:
-                                                                (FoodItem) {},
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons.shopping_cart_sharp,
-                                                      color: AppColors
-                                                          .primaryColor,
-                                                    ))
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }))
+                                itemBuilder:
+                                    (BuildContext context, int index) {}))
                   ],
                 ),
               ),

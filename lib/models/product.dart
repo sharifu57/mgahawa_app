@@ -1,6 +1,6 @@
 import 'package:mgahawa_app/models/categoryModel.dart';
 
-class FoodItem {
+class Product {
   int? id;
   String? name;
   String? description;
@@ -9,7 +9,7 @@ class FoodItem {
   int? quantity;
   Category? category;
 
-  FoodItem(
+  Product(
       {required this.id,
       required this.name,
       required this.description,
@@ -18,8 +18,8 @@ class FoodItem {
       required this.quantity,
       this.category});
 
-  factory FoodItem.fromJson(Map<String, dynamic> json) {
-    return FoodItem(
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
         id: json['id'] as int,
         name: json['name'],
         description: json['description'],
@@ -43,6 +43,6 @@ class FoodItem {
 
   @override
   String toString() {
-    return 'FoodItem(id: $id, name: $name, description: $description, price: $price, image: $image,quantity: $quantity, category: $category)';
+    return 'Product(id: $id, name: $name, description: $description, price: $price, image: $image,quantity: $quantity, category: $category)';
   }
 }
