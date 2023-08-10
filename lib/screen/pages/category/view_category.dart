@@ -79,21 +79,18 @@ class _ViewCategoryState extends State<ViewCategory> {
     // Convert the cart list to JSON and save to local storage
     String cartJson =
         jsonEncode(cart.map((product) => product.toJson()).toList());
-
-// Store the cartJson in SharedPreferences
     await prefs.setString('cart', cartJson);
 
-    // Optional: Show a confirmation message or update UI
-    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("${product.name} added to cart")),
+      SnackBar(
+          backgroundColor: AppColors.primaryColor,
+          content: Text("${product.name} added to cart")),
     );
   }
 
   @override
   void initState() {
     getProducts();
-
     super.initState();
   }
 
