@@ -1,10 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:mgahawa_app/includes/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class NavBar extends StatelessWidget implements PreferredSizeWidget {
+class NavBar extends StatefulWidget implements PreferredSizeWidget {
+  @override
+  _NavBarState createState() => _NavBarState();
+
   @override
   Size get preferredSize =>
       Size.fromHeight(kToolbarHeight); // Adjust the height as needed
+}
+
+class _NavBarState extends State<NavBar> {
+  String? carts;
+  @override
+  void initState() {
+    super.initState();
+    getLocal();
+  }
+
+  getLocal() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? localcart = prefs.getString("cart");
+
+    print("___carts");
+    print(localcart);
+    print("___end print cart");
+
+    setState(() {
+      carts = localcart;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +64,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
                   minHeight: 16,
                 ),
                 child: Text(
-                  '0',
+                  '${carts?.length ?? 0}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,

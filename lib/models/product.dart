@@ -29,16 +29,33 @@ class Product {
         category: json['category'] != null ? null : null);
   }
 
+  Product copyWith({
+    int? id,
+    String? name,
+    String? image,
+    int? quantity,
+    // ... other fields ...
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      image: image ?? this.image,
+      quantity: quantity ?? this.quantity,
+      // ... other fields ...
+    );
+  }
+
+  // Convert Product instance to JSON
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['name'] = name;
-    data['description'] = description;
-    data['price'] = price;
-    data['image'] = image;
-    data['quantity'] = quantity;
-    data['category'] = category?.toJson();
-    return data;
+    return {
+      'id': id,
+      'name': name,
+      'image': image,
+      'quantity': quantity,
+      // ... other fields ...
+    };
   }
 
   @override
