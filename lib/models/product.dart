@@ -32,6 +32,8 @@ class Product {
   Product copyWith({
     int? id,
     String? name,
+    String? price,
+    String? description,
     String? image,
     int? quantity,
     // ... other fields ...
@@ -53,6 +55,8 @@ class Product {
       'id': id,
       'name': name,
       'image': image,
+      'price': price,
+      'description': description,
       'quantity': quantity,
       // ... other fields ...
     };

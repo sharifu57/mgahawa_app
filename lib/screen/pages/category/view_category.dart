@@ -79,6 +79,8 @@ class _ViewCategoryState extends State<ViewCategory> {
     // Convert the cart list to JSON and save to local storage
     String cartJson =
         jsonEncode(cart.map((product) => product.toJson()).toList());
+
+// Store the cartJson in SharedPreferences
     await prefs.setString('cart', cartJson);
 
     // Optional: Show a confirmation message or update UI
@@ -188,7 +190,7 @@ class _ViewCategoryState extends State<ViewCategory> {
                                       fit: BoxFit.cover,
                                       height:
                                           MediaQuery.of(context).size.height,
-                                      width: MediaQuery.of(context).size.height,
+                                      width: MediaQuery.of(context).size.width,
                                     ),
                                   ),
                                   Container(
