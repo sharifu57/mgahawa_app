@@ -1,71 +1,111 @@
 import 'package:flutter/material.dart';
-import 'package:mgahawa_app/includes/colors.dart';
-import 'package:mgahawa_app/models/product.dart';
+import 'package:mgahawa_app/screen/navigation/cart.dart';
 
-class CheckoutListScreen extends StatelessWidget {
-  final List<Product> checkoutList;
-  final Function(Product) onDismiss;
+import '../../includes/colors.dart';
 
-  CheckoutListScreen({required this.checkoutList, required this.onDismiss});
-
-  handleDismis() {}
+class CheckOut extends StatefulWidget {
+  const CheckOut({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Build your UI to display the checkout list here
+  State<CheckOut> createState() => _CheckOutState();
+}
 
+class _CheckOutState extends State<CheckOut> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 10,
+        leading: Center(
+            child: IconButton(
+                onPressed: () {
+                  // Navigator.pushNamed(context, "/cart");
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext) => Cart()));
+                },
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 17,
+                ))),
         title: Text(
-          "My Cart",
-          style: TextStyle(fontSize: 17),
+          "Checkout",
+          style: TextStyle(fontSize: 15),
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: checkoutList.length,
-              itemBuilder: (context, index) {
-                Product food = checkoutList[index];
-
-                return Container(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Dismissible(
-                    key: ValueKey(food.name), // Use a unique key for each item
-                    onDismissed: (direction) {
-                      // Remove the item from the data source.
-                      // setState(() {
-                      //   checkoutList.removeAt(index);
-                      // });
-
-                      onDismiss(food);
-
-                      // Then show a snackbar.
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${food.name} dismissed')),
-                      );
+        actions: [
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(Icons.shopping_cart),
+                onPressed: () {
+                  // Add your onPressed functionality here
+                },
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Container(
+                  padding: EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 16,
+                    minHeight: 16,
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      print("____Cart clicked");
                     },
-                    child: Card(
-                      child: ListTile(
-                        title: Text("${food.name}"),
+                    child: Text(
+                      'One',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            child: Card(
-              color: AppColors.primaryColor,
-              child: Text("Proceed"),
-            ),
-          )
         ],
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 30),
+              child: Center(
+                  child: Icon(
+                Icons.wallet_membership,
+                size: 100,
+                color: AppColors.primaryColor,
+              )),
+            ),
+            Container(
+              child: Text(
+                "12000 Tzs",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+                child: SizedBox(
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    alignment: Alignment.centerLeft,
+                    child: Text('Personal Information'),
+                  )
+                ],
+              ),
+            ))
+          ],
+        ),
       ),
     );
   }

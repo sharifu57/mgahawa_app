@@ -188,17 +188,7 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               children: [
                 IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CheckoutListScreen(
-                            checkoutList: _ckeckoutList,
-                            onDismiss: (FoodItem) {},
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: () {},
                     icon: Icon(
                       Icons.shopping_cart_checkout,
                       color: AppColors.primaryColor,

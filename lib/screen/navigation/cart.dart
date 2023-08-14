@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mgahawa_app/components/navbar.dart';
 import 'package:mgahawa_app/includes/colors.dart';
 import 'package:mgahawa_app/models/product.dart';
+import 'package:mgahawa_app/screen/pages/checkout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/config.dart';
@@ -66,9 +67,19 @@ class _CartState extends State<Cart> {
               Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(bottom: 10),
-                child: const Text(
-                  "Order Summary",
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                child: Row(
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/screen");
+                        },
+                        child: const Text("Home")),
+                    const Text("/"),
+                    const Text(
+                      "Order Summary",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
@@ -210,14 +221,28 @@ class _CartState extends State<Cart> {
                                   flex: 5,
                                   child: Container(
                                     alignment: Alignment.center,
-                                    child: Card(
-                                      child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        child: const Text(
-                                          "Check Out",
-                                          style: TextStyle(
-                                              color: AppColors.primaryColor,
-                                              fontWeight: FontWeight.bold),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        print("_____checkout");
+                                        // CheckOut();
+                                        // Navigator.pushNamed(
+                                        //     context, '/checkout');
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (BuildContext) =>
+                                                    CheckOut()));
+                                      },
+                                      child: Card(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          child: const Text(
+                                            "Check Out",
+                                            style: TextStyle(
+                                                color: AppColors.primaryColor,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),

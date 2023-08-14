@@ -282,10 +282,17 @@ class _ViewCategoryState extends State<ViewCategory> {
                               ),
                             );
                           })
-                      : const Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.black,
+                      : Center(
+                          child: Column(
+                            children: [
+                              CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.black,
+                              ),
+                              Container(
+                                child: Icon(Icons.hourglass_empty),
+                              )
+                            ],
                           ),
                         ),
                 ))

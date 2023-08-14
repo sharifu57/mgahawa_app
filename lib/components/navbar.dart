@@ -67,8 +67,7 @@ class _NavBarState extends State<NavBar> {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    Cart();
-                    print("____Cart clicked");
+                    Navigator.pushNamed(context, '/cart');
                   },
                   child: Text(
                     '${carts?.length ?? 0}',
