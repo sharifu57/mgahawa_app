@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mgahawa_app/includes/colors.dart';
+import 'package:mgahawa_app/screen/navigation/cart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NavBar extends StatefulWidget implements PreferredSizeWidget {
@@ -47,6 +48,7 @@ class _NavBarState extends State<NavBar> {
             IconButton(
               icon: Icon(Icons.shopping_cart),
               onPressed: () {
+                Cart();
                 // Add your onPressed functionality here
               },
             ),
@@ -63,13 +65,19 @@ class _NavBarState extends State<NavBar> {
                   minWidth: 16,
                   minHeight: 16,
                 ),
-                child: Text(
-                  '${carts?.length ?? 0}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
+                child: GestureDetector(
+                  onTap: () {
+                    Cart();
+                    print("____Cart clicked");
+                  },
+                  child: Text(
+                    '${carts?.length ?? 0}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             ),

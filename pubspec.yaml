@@ -45,6 +45,7 @@ dependencies:
   marquee: ^2.2.3
   carousel_slider: ^4.2.1
   breadcrumbs: ^0.1.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

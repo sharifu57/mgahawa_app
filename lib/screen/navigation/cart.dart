@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mgahawa_app/components/navbar.dart';
 import 'package:mgahawa_app/includes/colors.dart';
 import 'package:mgahawa_app/models/product.dart';
@@ -43,6 +44,18 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormatter = NumberFormat.currency(
+      symbol: "Tzs ", // Replace with your desired currency symbol
+      decimalDigits: 2,
+    );
+    double totalCartAmount = 0;
+    // double price = double.tryParse(produc)
+    for (var product in cartProducts) {
+      double price = double.tryParse(product.price as String) ?? 0.0;
+      int quantity = product.quantity as int;
+      totalCartAmount += price * quantity;
+    }
+
     return Scaffold(
         appBar: NavBar(),
         body: Container(
@@ -66,6 +79,13 @@ class _CartState extends State<Cart> {
                     child: ListView.builder(
                         itemCount: cartProducts.length,
                         itemBuilder: (BuildContext context, index) {
+                          int? quantity = cartProducts[index].quantity;
+                          double price = double.tryParse(
+                                  cartProducts[index].price ?? "0.0") ??
+                              0.0;
+
+                          double totalPrice = (quantity ?? 0) * price;
+
                           return SizedBox(
                             height: 120,
                             child: Card(
@@ -78,9 +98,7 @@ class _CartState extends State<Cart> {
                                         child: Container(
                                           child: cartProducts[index].image ==
                                                   null
-                                              ? Container(
-                                                  child: Text(""),
-                                                )
+                                              ? const Text("")
                                               : Image.network(
                                                   '$path${cartProducts[index].image}',
                                                   fit: BoxFit.cover,
@@ -108,7 +126,7 @@ class _CartState extends State<Cart> {
                                               Container(
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
-                                                  " Tzs ${cartProducts[index].price}",
+                                                  "${currencyFormatter.format(price)},",
                                                   style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w400,
@@ -116,13 +134,22 @@ class _CartState extends State<Cart> {
                                                 ),
                                               ),
                                               Container(
-                                                padding:
-                                                    EdgeInsets.only(top: 20),
+                                                padding: const EdgeInsets.only(
+                                                    top: 10),
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
                                                   "X ${cartProducts[index].quantity}",
-                                                  style:
-                                                      TextStyle(fontSize: 15),
+                                                  style: const TextStyle(
+                                                      fontSize: 15),
+                                                ),
+                                              ),
+                                              Container(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  "${currencyFormatter.format(totalPrice)},",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500),
                                                 ),
                                               )
                                             ],
@@ -131,9 +158,14 @@ class _CartState extends State<Cart> {
                                     Expanded(
                                         flex: 1,
                                         child: IconButton(
-                                            onPressed: () {
-                                              print(
-                                                  "____remove from cart ${cartProducts[index]}");
+                                            onPressed: () async {
+                                              // Navigator.of(dialogContext)
+                                              //     .pop(); // Close the dialog
+                                              // await removeItemFromCart(
+                                              //     index); // Remove the item from cart
+                                              // await updateLocalCart(); // Update the local storage
+
+                                              _showConfirmRemoveDialog(index);
                                             },
                                             icon: const Icon(
                                               Icons.cancel_outlined,
@@ -151,19 +183,47 @@ class _CartState extends State<Cart> {
                 // ignore: unnecessary_null_comparison
                 child: cartProducts.length != 0
                     ? SizedBox(
-                        height: 50,
+                        height: 70,
                         child: InkWell(
                           onTap: () {
                             print("_____check out");
                           },
-                          child: const Card(
+                          child: Card(
                             color: AppColors.primaryColor,
                             child: Center(
-                                child: Text(
-                              "Check Out",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                      padding: EdgeInsets.only(
+                                        left: 15,
+                                      ),
+                                      child: Text(
+                                        "${currencyFormatter.format(totalCartAmount)},",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )),
+                                ),
+                                Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Card(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(10),
+                                        child: const Text(
+                                          "Check Out",
+                                          style: TextStyle(
+                                              color: AppColors.primaryColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             )),
                           ),
                         ),
@@ -173,5 +233,58 @@ class _CartState extends State<Cart> {
             ],
           ),
         ));
+  }
+
+  Future<void> _showConfirmRemoveDialog(int index) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: Text("Confirm Removal"),
+            content: SingleChildScrollView(
+              child: ListBody(children: <Widget>[
+                Text(
+                    'Are you sure you want to remove this item from the cart?'),
+              ]),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(); // Close the dialog
+                },
+              ),
+              TextButton(
+                child: Text('Yes'),
+                onPressed: () async {
+                  Navigator.of(dialogContext).pop(); // Close the dialog
+                  await removeItemFromCart(index); // Remove the item from cart
+                  await updateLocalCart(); // Update the local storage
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  removeItemFromCart(int index) async {
+    print("_____product remove");
+    cartProducts.removeAt(index);
+
+    print("____removed here");
+  }
+
+  Future<void> updateLocalCart() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<Map<String, dynamic>> cartList = cartProducts
+        .map((item) =>
+            item.toJson()) // Assuming you have a toJson method in Product model
+        .toList();
+
+    String cartJson = jsonEncode(cartList);
+    await prefs.setString("cart", cartJson);
+
+    setState(() {}); // Refresh the UI
   }
 }

@@ -83,7 +83,7 @@ class _IndexPageState extends State<IndexPage> {
                     ),
                     itemBuilder: (BuildContext context, int itemIndex,
                             int pageViewIndex) =>
-                        Container(
+                        SizedBox(
                           width: fullWidth,
                           child: Card(
                             color: AppColors.secondaryColor,
@@ -92,14 +92,13 @@ class _IndexPageState extends State<IndexPage> {
                         )),
               ),
               Container(
-                  padding: EdgeInsets.only(top: 20, left: 20),
+                  padding: const EdgeInsets.only(top: 20, left: 20),
                   alignment: Alignment.centerLeft,
                   child: ElevatedButton(
-                      onPressed: () {}, child: Text("Types of Foods"))),
-
+                      onPressed: () {}, child: const Text("Types of Foods"))),
               Expanded(
                   child: Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 child: GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -116,14 +115,11 @@ class _IndexPageState extends State<IndexPage> {
                       Category item = categories[index];
                       return GestureDetector(
                         onTap: () {
-                          print("____print ${item.id}");
-                          // Navigator.pushNamed(context, "/viewCategory",
-                          //     arguments: item);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ViewCategory(
-                                    categoryName: '${item.name}',
+                                      categoryName: '${item.name}',
                                       categoryId: '${item.id}',
                                       category: '$item')));
                         },
@@ -161,129 +157,6 @@ class _IndexPageState extends State<IndexPage> {
                       );
                     }),
               ))
-              // Expanded(
-              //     child: foods.isEmpty
-              //         ? Center(
-              //             child: Column(
-              //               children: [
-              //                 Icon(Icons.emoji_people),
-              //                 CircularProgressIndicator(
-              //                   strokeWidth: 1,
-              //                   color: AppColors.primaryColor,
-              //                 )
-              //               ],
-              //             ),
-              //           )
-              //         : GridView.builder(
-              //             gridDelegate:
-              //                 const SliverGridDelegateWithFixedCrossAxisCount(
-              //               crossAxisCount: 2,
-              //               childAspectRatio: 0.75,
-              //               mainAxisSpacing: 5.0,
-              //               crossAxisSpacing: 7.0,
-              //             ),
-              //             itemCount: foods.isEmpty ? 0 : foods.length,
-              //             itemBuilder: (BuildContext context, int index) {
-              //               FoodItem item = foods[index];
-              //               bool isSelected = _ckeckoutList.contains(item);
-              //               return GestureDetector(
-              //                 onTap: () {
-              //                   handleItemClick(item);
-
-              //                   ScaffoldMessenger.of(context)
-              //                       .showSnackBar(SnackBar(
-              //                     content: isSelected
-              //                         ? Text('Removed from the cart')
-              //                         : Text("Added to Cart"),
-              //                     duration: const Duration(seconds: 1),
-              //                     action: SnackBarAction(
-              //                       label: 'ACTION',
-              //                       onPressed: () {},
-              //                     ),
-              //                   ));
-              //                 },
-              //                 child: Card(
-              //                   color: isSelected ? Colors.red : Colors.white,
-              //                   child: Column(
-              //                     children: [
-              //                       Expanded(
-              //                           child: ClipRRect(
-              //                         borderRadius: BorderRadius.circular(5),
-              //                         child: Image.network(
-              //                           '${item.image}',
-              //                           fit: BoxFit.contain,
-              //                           width: fullWidth,
-              //                           height: fullHeight / 4,
-              //                         ),
-              //                       )),
-              //                       const SizedBox(
-              //                         height: 10,
-              //                       ),
-              //                       Container(
-              //                         padding: const EdgeInsets.fromLTRB(
-              //                             10, 10, 10, 0),
-              //                         child: Row(
-              //                           mainAxisAlignment:
-              //                               MainAxisAlignment.spaceBetween,
-              //                           children: [
-              //                             Text(
-              //                               "${item.name}",
-              //                               style: const TextStyle(
-              //                                   fontSize: 12,
-              //                                   fontWeight: FontWeight.w500),
-              //                             ),
-              //                           ],
-              //                         ),
-              //                       ),
-              //                       Container(
-              //                         padding:
-              //                             const EdgeInsets.fromLTRB(10, 0, 0, 0),
-              //                         child: Row(
-              //                           mainAxisAlignment:
-              //                               MainAxisAlignment.spaceBetween,
-              //                           children: [
-              //                             Row(
-              //                               children: [
-              //                                 const Text(
-              //                                   "TZS ",
-              //                                   style: TextStyle(
-              //                                       fontSize: 12,
-              //                                       fontWeight: FontWeight.w500),
-              //                                 ),
-              //                                 Text(
-              //                                   "${item.price}",
-              //                                   style: const TextStyle(
-              //                                       fontSize: 12,
-              //                                       fontWeight: FontWeight.w500),
-              //                                 ),
-              //                               ],
-              //                             ),
-              //                             IconButton(
-              //                                 onPressed: () {
-              //                                   print("______tapping one");
-              //                                   Navigator.push(
-              //                                     context,
-              //                                     MaterialPageRoute(
-              //                                       builder: (context) =>
-              //                                           CheckoutListScreen(
-              //                                         checkoutList: _ckeckoutList,
-              //                                         onDismiss: (FoodItem) {},
-              //                                       ),
-              //                                     ),
-              //                                   );
-              //                                 },
-              //                                 icon: const Icon(
-              //                                   Icons.shopping_cart_sharp,
-              //                                   color: AppColors.primaryColor,
-              //                                 ))
-              //                           ],
-              //                         ),
-              //                       )
-              //                     ],
-              //                   ),
-              //                 ),
-              //               );
-              //             }))
             ],
           ),
         ),

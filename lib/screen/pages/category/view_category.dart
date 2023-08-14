@@ -13,11 +13,12 @@ class ViewCategory extends StatefulWidget {
   final String? category;
   final String? categoryId;
   final String? categoryName;
-  const ViewCategory(
-      {super.key,
-      required this.category,
-      required this.categoryId,
-      required this.categoryName});
+  const ViewCategory({
+    super.key,
+    required this.category,
+    required this.categoryId,
+    required this.categoryName,
+  });
 
   @override
   State<ViewCategory> createState() => _ViewCategoryState();
