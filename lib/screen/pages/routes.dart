@@ -10,6 +10,5 @@ import '../navigation/cart.dart';
 final route = {
   '/splash': (BuildContext context) => SplashScreen(),
   '/screen': (BuildContext context) => Screen(),
-  '/checkout': (BuildContext context) => CheckOut(),
   '/cart': (BuildContext context) => Cart()
 };

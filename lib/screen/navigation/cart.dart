@@ -224,15 +224,14 @@ class _CartState extends State<Cart> {
                                     child: GestureDetector(
                                       onTap: () {
                                         print("_____checkout");
-                                        // CheckOut();
-                                        // Navigator.pushNamed(
-                                        //     context, '/checkout');
 
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (BuildContext) =>
-                                                    CheckOut()));
+                                                    CheckOut(
+                                                        totalCheckAmount:
+                                                            totalCartAmount)));
                                       },
                                       child: Card(
                                         child: Container(
@@ -294,10 +293,7 @@ class _CartState extends State<Cart> {
   }
 
   removeItemFromCart(int index) async {
-    print("_____product remove");
     cartProducts.removeAt(index);
-
-    print("____removed here");
   }
 
   Future<void> updateLocalCart() async {

@@ -291,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Expanded(
                         child: foods.isEmpty
-                            ? Center(
+                            ? const Center(
                                 child: Column(
                                   children: [
                                     Icon(Icons.emoji_people),
