@@ -170,12 +170,6 @@ class _CartState extends State<Cart> {
                                         flex: 1,
                                         child: IconButton(
                                             onPressed: () async {
-                                              // Navigator.of(dialogContext)
-                                              //     .pop(); // Close the dialog
-                                              // await removeItemFromCart(
-                                              //     index); // Remove the item from cart
-                                              // await updateLocalCart(); // Update the local storage
-
                                               _showConfirmRemoveDialog(index);
                                             },
                                             icon: const Icon(

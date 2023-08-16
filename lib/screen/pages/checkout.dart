@@ -1,12 +1,17 @@
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mgahawa_app/models/product.dart';
 import 'package:mgahawa_app/screen/navigation/cart.dart';
+import 'package:mgahawa_app/services/api.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../includes/colors.dart';
+import '../../services/config.dart';
 
 class CheckOut extends StatefulWidget {
   final double? totalCheckAmount;
@@ -21,10 +26,13 @@ class _CheckOutState extends State<CheckOut> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   List<Product> items = [];
+  String? orderNumber;
+
   @override
   void initState() {
     super.initState();
     getLocal();
+    randomNumber();
   }
 
   getLocal() async {
@@ -45,24 +53,24 @@ class _CheckOutState extends State<CheckOut> {
     }
   }
 
+  randomNumber() {
+    int currentTime = DateTime.now().second;
+    int randomValue = Random().nextInt(9999);
+
+    String ordNumber = '${randomValue}${currentTime}';
+
+    setState(() {
+      orderNumber = ordNumber;
+    });
+    return orderNumber;
+  }
+
   @override
   Widget build(BuildContext context) {
     final currencyFormatter = NumberFormat.currency(
       symbol: "Tzs ", // Replace with your desired currency symbol
       decimalDigits: 2,
     );
-    var size = MediaQuery.of(context).size;
-    final double labelTextFontSize = size.height / 80;
-    final double hintTextFontSize = size.height / 80;
-    final double inputTextFontSize = size.height / 60;
-    final double errorTextFontSize = size.height / 80;
-    final double prefixIconSize = size.height / 90;
-    outlinedTextFieldBoarder() {
-      return OutlineInputBorder(
-        borderRadius:
-            BorderRadius.circular(10.0), // Adjust the radius as needed
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -74,11 +82,11 @@ class _CheckOutState extends State<CheckOut> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext) => Cart()));
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   size: 17,
                 ))),
-        title: Text(
+        title: const Text(
           "Checkout",
           style: TextStyle(fontSize: 15),
         ),
@@ -121,216 +129,373 @@ class _CheckOutState extends State<CheckOut> {
           ),
         ],
       ),
-      body: Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Container(
-              child: Card(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: const LinearGradient(
-                      colors: [
-                        AppColors.primaryColor,
-                        AppColors.secondaryColor
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(top: 10),
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    const Text(
+                      "Order Number",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
-                  ),
-                  child: Container(
+                    Text("${orderNumber}")
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Visibility(
+                  // child: ListView.builder(
+                  //     itemCount: items.length,
+                  //     itemBuilder: (BuildContext context, index) {
+                  //       Product item = items[index];
+                  //       return Card(
+                  //         child: Column(
+                  //           children: <Widget>[
+                  //             Container(
+                  //               child: Text("Order Details"),
+                  //             )
+                  //           ],
+                  //         ),
+                  //       );
+                  //     })
+                  child: Card(
+                    elevation: 1,
+                    child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(20),
+                      padding: EdgeInsets.all(10),
                       child: Column(
                         children: [
                           Container(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                children: [
-                                  Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: const Text(
-                                        "total:",
-                                        style: TextStyle(color: Colors.white),
-                                      )),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      currencyFormatter
-                                          .format(widget.totalCheckAmount),
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                          const Divider(),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              "Items:",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "${items.length}",
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
+                              "Order Details",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Divider(),
+                          Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text("Total Price"),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    currencyFormatter
+                                        .format(widget.totalCheckAmount),
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black),
+                                  ),
+                                )
+                              ],
                             ),
                           )
                         ],
-                      )),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                alignment: Alignment.center,
+                child: const Column(
+                  children: [
+                    Text("Fill your Details"),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(16),
+        color: Colors.white, // Adjust the color as needed
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: AppColors.primaryColor, // Set the background color
+                ),
+                onPressed: () {
+                  // Add functionality for the first button
+                  _openPopup(context);
+                },
+                child: Text(
+                  "Customer Details",
+                  style: TextStyle(fontSize: 14, color: Colors.white),
                 ),
               ),
             ),
+            SizedBox(height: 3), // Add spacing between the buttons
             Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(top: 30),
-              child: const Text(
-                "Customer Details",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue, // Set the background color
+                ),
+                onPressed: () {
+                  // Add functionality for the second button
+                },
+                child: Text(
+                  "Confirm Order",
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
               ),
             ),
-            Expanded(
-                child: Form(
-                    child: Column(
-              children: [
-                Expanded(
-                    child: Column(
-                  children: [
-                    Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Full Name',
-                            hintText: "john doe",
-                            hintStyle: TextStyle(
-                                fontSize: hintTextFontSize,
-                                fontWeight: FontWeight.w300,
-                                color: const Color(0xff005B29)),
-                            labelStyle: TextStyle(
-                                fontSize: labelTextFontSize,
-                                color: const Color(0xff005B29)),
-                            filled: true,
-                            prefixIcon: Icon(
-                              Icons.person,
-                              size: prefixIconSize,
-                              color: const Color(0xff005B29),
-                            ),
-                            fillColor: Colors.white.withOpacity(0.0),
-                            errorStyle: const TextStyle(fontSize: 10.0),
-                            border: outlinedTextFieldBoarder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                          validator: (String? value) {
-                            if (value == null) {
-                              return 'please provide your name';
-                            }
-                            return null;
-                          },
-                          onSaved: (String? value) {
-                            _formData['customer_name'] = value;
-                          },
-                        )),
-                    Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Mobile Number',
-                            hintText: "25571XXXXXXX",
-                            hintStyle: TextStyle(
-                                fontSize: hintTextFontSize,
-                                fontWeight: FontWeight.w300,
-                                color: const Color(0xff005B29)),
-                            labelStyle: TextStyle(
-                                fontSize: labelTextFontSize,
-                                color: const Color(0xff005B29)),
-                            filled: true,
-                            prefixIcon: Icon(
-                              Icons.phone_android,
-                              size: prefixIconSize,
-                              color: const Color(0xff005B29),
-                            ),
-                            fillColor: Colors.white.withOpacity(0.0),
-                            errorStyle: const TextStyle(fontSize: 10.0),
-                            border: outlinedTextFieldBoarder(),
-                          ),
-                          initialValue: '255',
-                          keyboardType: TextInputType.number,
-                          validator: (String? value) {
-                            if (value?.length != 12 ||
-                                value == null ||
-                                !RegExp(r"^[0-9]*$").hasMatch(value)) {
-                              return 'Tafadhali ingiza namba ya simu ilio sahihi';
-                            }
-                            return null;
-                          },
-                          onSaved: (String? value) {
-                            _formData['phone_number'] = value;
-                          },
-                        )),
-                    Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Location',
-                            hintText: "current location",
-                            hintStyle: TextStyle(
-                                fontSize: hintTextFontSize,
-                                fontWeight: FontWeight.w300,
-                                color: const Color(0xff005B29)),
-                            labelStyle: TextStyle(
-                                fontSize: labelTextFontSize,
-                                color: const Color(0xff005B29)),
-                            filled: true,
-                            prefixIcon: Icon(
-                              Icons.location_city,
-                              size: prefixIconSize,
-                              color: const Color(0xff005B29),
-                            ),
-                            fillColor: Colors.white.withOpacity(0.0),
-                            errorStyle: const TextStyle(fontSize: 10.0),
-                            border: outlinedTextFieldBoarder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                          validator: (String? value) {
-                            if (value == null) {
-                              return 'please provide your location';
-                            }
-                            return null;
-                          },
-                          onSaved: (String? value) {
-                            _formData['location'] = value;
-                          },
-                        )),
-                  ],
-                )),
-                InkWell(
-                  splashColor: AppColors.secondaryColor,
-                  focusColor: AppColors.primaryColor,
-                  onTap: () {
-                    print("____send order");
-                  },
-                  child: Card(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      child: const Center(child: Text("Send Order")),
-                    ),
-                  ),
-                )
-              ],
-            )))
           ],
         ),
       ),
     );
+  }
+
+  _openPopup(context) {
+    bool isLoading = false;
+    var alertStyle = AlertStyle(
+      animationType: AnimationType.grow,
+      isCloseButton: true,
+      isOverlayTapDismiss: false,
+      descStyle: TextStyle(fontWeight: FontWeight.bold),
+      descTextAlign: TextAlign.start,
+      animationDuration: Duration(milliseconds: 400),
+      alertBorder: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        side: BorderSide(
+          color: Colors.grey,
+        ),
+      ),
+      titleStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      alertAlignment: Alignment.center,
+    );
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    var size = MediaQuery.of(context).size;
+    final double labelTextFontSize = size.height / 80;
+    final double hintTextFontSize = size.height / 80;
+    final double inputTextFontSize = size.height / 60;
+    final double errorTextFontSize = size.height / 80;
+    final double prefixIconSize = size.height / 90;
+    outlinedTextFieldBoarder() {
+      return OutlineInputBorder(
+        borderRadius:
+            BorderRadius.circular(10.0), // Adjust the radius as needed
+      );
+    }
+
+    Alert(
+        context: context,
+        title: "CUSTOMER INFO",
+        style: alertStyle,
+        content: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'First Name',
+                  hintText: "john",
+                  hintStyle: TextStyle(
+                      fontSize: hintTextFontSize,
+                      fontWeight: FontWeight.w300,
+                      color: const Color(0xff005B29)),
+                  labelStyle: TextStyle(
+                      fontSize: labelTextFontSize,
+                      color: const Color(0xff005B29)),
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.person,
+                    size: prefixIconSize,
+                    color: const Color(0xff005B29),
+                  ),
+                  fillColor: Colors.white.withOpacity(0.0),
+                  errorStyle: const TextStyle(fontSize: 10.0),
+                ),
+                keyboardType: TextInputType.text,
+                validator: (String? value) {
+                  if (value == null) {
+                    return 'please provide your first name';
+                  }
+                  return null;
+                },
+                onSaved: (String? value) {
+                  _formData['first_name'] = value;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Last Name',
+                  hintText: "john",
+                  hintStyle: TextStyle(
+                      fontSize: hintTextFontSize,
+                      fontWeight: FontWeight.w300,
+                      color: const Color(0xff005B29)),
+                  labelStyle: TextStyle(
+                      fontSize: labelTextFontSize,
+                      color: const Color(0xff005B29)),
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.person,
+                    size: prefixIconSize,
+                    color: const Color(0xff005B29),
+                  ),
+                  fillColor: Colors.white.withOpacity(0.0),
+                  errorStyle: const TextStyle(fontSize: 10.0),
+                ),
+                keyboardType: TextInputType.text,
+                validator: (String? value) {
+                  if (value == null) {
+                    return 'please provide your last name';
+                  }
+                  return null;
+                },
+                onSaved: (String? value) {
+                  _formData['last_name'] = value;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  hintText: "email",
+                  hintStyle: TextStyle(
+                      fontSize: hintTextFontSize,
+                      fontWeight: FontWeight.w300,
+                      color: const Color(0xff005B29)),
+                  labelStyle: TextStyle(
+                      fontSize: labelTextFontSize,
+                      color: const Color(0xff005B29)),
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.email,
+                    size: prefixIconSize,
+                    color: const Color(0xff005B29),
+                  ),
+                  fillColor: Colors.white.withOpacity(0.0),
+                  errorStyle: const TextStyle(fontSize: 10.0),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                validator: (String? value) {
+                  if (value == null) {
+                    return 'please provide your email';
+                  }
+                  return null;
+                },
+                onSaved: (String? value) {
+                  _formData['email'] = value;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Phone Number',
+                  hintText: "phone number",
+                  hintStyle: TextStyle(
+                      fontSize: hintTextFontSize,
+                      fontWeight: FontWeight.w300,
+                      color: const Color(0xff005B29)),
+                  labelStyle: TextStyle(
+                      fontSize: labelTextFontSize,
+                      color: const Color(0xff005B29)),
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.phone,
+                    size: prefixIconSize,
+                    color: const Color(0xff005B29),
+                  ),
+                  fillColor: Colors.white.withOpacity(0.0),
+                  errorStyle: const TextStyle(fontSize: 10.0),
+                ),
+                keyboardType: TextInputType.phone,
+                validator: (String? value) {
+                  if (value == null) {
+                    return 'please provide your email';
+                  }
+                  return null;
+                },
+                onSaved: (String? value) {
+                  _formData['phone_number'] = value;
+                },
+              ),
+            ],
+          ),
+        ),
+        buttons: [
+          DialogButton(
+            // onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              _createCustomer();
+            },
+            child: isLoading == false
+                ? Text(
+                    "Submit",
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                  )
+                : CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+          )
+        ]).show();
+  }
+
+  Future _createCustomer() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    _formKey.currentState!.save();
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    var submittedData = {
+      "username": _formData['username'],
+    };
+
+    print(submittedData);
+
+    final endpoint = '${config['apiBaseUrl']}/login';
+    final data = json.encode(submittedData);
+
+    var response = await sendPostRequest(context, endpoint, data);
+
+    // ignore: unnecessary_null_comparison
+
+    if (response != null) {
+      if (response['status'] == 201) {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        String data = jsonEncode(response);
+        print("_________user response");
+        await pref.setString('user', data);
+        await pref.setString('_accessToken', response?['accessToken']);
+        await pref.setString('_first_name', response?['user']['first_name']);
+        await pref.setString('_last_name', response?['user']['last_name']);
+        await pref.setString('_username', response?['user']['username']);
+        await pref.setInt('_userId', response?['user']['id']);
+
+        Navigator.restorablePushNamed(context, '/screen');
+      } else {}
+    } else {
+      return null;
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

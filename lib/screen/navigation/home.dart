@@ -293,7 +293,7 @@ class _HomePageState extends State<HomePage> {
                         child: foods.isEmpty
                             ? const Center(
                                 child: Column(
-                                  children: [
+                                  children: <Widget>[
                                     Icon(Icons.emoji_people),
                                     CircularProgressIndicator(
                                       strokeWidth: 1,
