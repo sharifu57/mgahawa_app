@@ -200,135 +200,133 @@ class _CheckOutState extends State<CheckOut> {
             ),
             Expanded(
                 child: Form(
-                    child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Expanded(
-                      child: Column(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.only(top: 20),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Full Name',
-                              hintText: "john doe",
-                              hintStyle: TextStyle(
-                                  fontSize: hintTextFontSize,
-                                  fontWeight: FontWeight.w300,
-                                  color: const Color(0xff005B29)),
-                              labelStyle: TextStyle(
-                                  fontSize: labelTextFontSize,
-                                  color: const Color(0xff005B29)),
-                              filled: true,
-                              prefixIcon: Icon(
-                                Icons.person,
-                                size: prefixIconSize,
-                                color: const Color(0xff005B29),
-                              ),
-                              fillColor: Colors.white.withOpacity(0.0),
-                              errorStyle: const TextStyle(fontSize: 10.0),
-                              border: outlinedTextFieldBoarder(),
+                    child: Column(
+              children: [
+                Expanded(
+                    child: Column(
+                  children: [
+                    Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Full Name',
+                            hintText: "john doe",
+                            hintStyle: TextStyle(
+                                fontSize: hintTextFontSize,
+                                fontWeight: FontWeight.w300,
+                                color: const Color(0xff005B29)),
+                            labelStyle: TextStyle(
+                                fontSize: labelTextFontSize,
+                                color: const Color(0xff005B29)),
+                            filled: true,
+                            prefixIcon: Icon(
+                              Icons.person,
+                              size: prefixIconSize,
+                              color: const Color(0xff005B29),
                             ),
-                            keyboardType: TextInputType.number,
-                            validator: (String? value) {
-                              if (value == null) {
-                                return 'please provide your name';
-                              }
-                              return null;
-                            },
-                            onSaved: (String? value) {
-                              _formData['customer_name'] = value;
-                            },
-                          )),
-                      Container(
-                          padding: EdgeInsets.only(top: 20),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Mobile Number',
-                              hintText: "25571XXXXXXX",
-                              hintStyle: TextStyle(
-                                  fontSize: hintTextFontSize,
-                                  fontWeight: FontWeight.w300,
-                                  color: const Color(0xff005B29)),
-                              labelStyle: TextStyle(
-                                  fontSize: labelTextFontSize,
-                                  color: const Color(0xff005B29)),
-                              filled: true,
-                              prefixIcon: Icon(
-                                Icons.phone_android,
-                                size: prefixIconSize,
-                                color: const Color(0xff005B29),
-                              ),
-                              fillColor: Colors.white.withOpacity(0.0),
-                              errorStyle: const TextStyle(fontSize: 10.0),
-                              border: outlinedTextFieldBoarder(),
+                            fillColor: Colors.white.withOpacity(0.0),
+                            errorStyle: const TextStyle(fontSize: 10.0),
+                            border: outlinedTextFieldBoarder(),
+                          ),
+                          keyboardType: TextInputType.number,
+                          validator: (String? value) {
+                            if (value == null) {
+                              return 'please provide your name';
+                            }
+                            return null;
+                          },
+                          onSaved: (String? value) {
+                            _formData['customer_name'] = value;
+                          },
+                        )),
+                    Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Mobile Number',
+                            hintText: "25571XXXXXXX",
+                            hintStyle: TextStyle(
+                                fontSize: hintTextFontSize,
+                                fontWeight: FontWeight.w300,
+                                color: const Color(0xff005B29)),
+                            labelStyle: TextStyle(
+                                fontSize: labelTextFontSize,
+                                color: const Color(0xff005B29)),
+                            filled: true,
+                            prefixIcon: Icon(
+                              Icons.phone_android,
+                              size: prefixIconSize,
+                              color: const Color(0xff005B29),
                             ),
-                            initialValue: '255',
-                            keyboardType: TextInputType.number,
-                            validator: (String? value) {
-                              if (value?.length != 12 ||
-                                  value == null ||
-                                  !RegExp(r"^[0-9]*$").hasMatch(value)) {
-                                return 'Tafadhali ingiza namba ya simu ilio sahihi';
-                              }
-                              return null;
-                            },
-                            onSaved: (String? value) {
-                              _formData['phone_number'] = value;
-                            },
-                          )),
-                      Container(
-                          padding: EdgeInsets.only(top: 20),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Location',
-                              hintText: "current location",
-                              hintStyle: TextStyle(
-                                  fontSize: hintTextFontSize,
-                                  fontWeight: FontWeight.w300,
-                                  color: const Color(0xff005B29)),
-                              labelStyle: TextStyle(
-                                  fontSize: labelTextFontSize,
-                                  color: const Color(0xff005B29)),
-                              filled: true,
-                              prefixIcon: Icon(
-                                Icons.location_city,
-                                size: prefixIconSize,
-                                color: const Color(0xff005B29),
-                              ),
-                              fillColor: Colors.white.withOpacity(0.0),
-                              errorStyle: const TextStyle(fontSize: 10.0),
-                              border: outlinedTextFieldBoarder(),
+                            fillColor: Colors.white.withOpacity(0.0),
+                            errorStyle: const TextStyle(fontSize: 10.0),
+                            border: outlinedTextFieldBoarder(),
+                          ),
+                          initialValue: '255',
+                          keyboardType: TextInputType.number,
+                          validator: (String? value) {
+                            if (value?.length != 12 ||
+                                value == null ||
+                                !RegExp(r"^[0-9]*$").hasMatch(value)) {
+                              return 'Tafadhali ingiza namba ya simu ilio sahihi';
+                            }
+                            return null;
+                          },
+                          onSaved: (String? value) {
+                            _formData['phone_number'] = value;
+                          },
+                        )),
+                    Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Location',
+                            hintText: "current location",
+                            hintStyle: TextStyle(
+                                fontSize: hintTextFontSize,
+                                fontWeight: FontWeight.w300,
+                                color: const Color(0xff005B29)),
+                            labelStyle: TextStyle(
+                                fontSize: labelTextFontSize,
+                                color: const Color(0xff005B29)),
+                            filled: true,
+                            prefixIcon: Icon(
+                              Icons.location_city,
+                              size: prefixIconSize,
+                              color: const Color(0xff005B29),
                             ),
-                            keyboardType: TextInputType.number,
-                            validator: (String? value) {
-                              if (value == null) {
-                                return 'please provide your location';
-                              }
-                              return null;
-                            },
-                            onSaved: (String? value) {
-                              _formData['location'] = value;
-                            },
-                          )),
-                    ],
-                  )),
-                  InkWell(
-                    splashColor: AppColors.secondaryColor,
-                    focusColor: AppColors.primaryColor,
-                    onTap: () {
-                      print("____send order");
-                    },
-                    child: Card(
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        child: const Center(child: Text("Send Order")),
-                      ),
+                            fillColor: Colors.white.withOpacity(0.0),
+                            errorStyle: const TextStyle(fontSize: 10.0),
+                            border: outlinedTextFieldBoarder(),
+                          ),
+                          keyboardType: TextInputType.number,
+                          validator: (String? value) {
+                            if (value == null) {
+                              return 'please provide your location';
+                            }
+                            return null;
+                          },
+                          onSaved: (String? value) {
+                            _formData['location'] = value;
+                          },
+                        )),
+                  ],
+                )),
+                InkWell(
+                  splashColor: AppColors.secondaryColor,
+                  focusColor: AppColors.primaryColor,
+                  onTap: () {
+                    print("____send order");
+                  },
+                  child: Card(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      child: const Center(child: Text("Send Order")),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             )))
           ],
         ),
